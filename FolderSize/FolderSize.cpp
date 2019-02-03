@@ -1,4 +1,4 @@
-// ПАВЛОВ АЛЕКСАНДР
+// Леханова Лена
 
 #include <windows.h>
 #include <stdio.h>
