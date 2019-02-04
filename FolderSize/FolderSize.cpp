@@ -23,15 +23,22 @@ void dfs() {
     hFind = FindFirstFile(L"*", &res);   // найти первый файл
  
     do {
-        count++; // некоторые файлы не считаются??
-        _tprintf(TEXT("file #%d is <%s>\n"), count, res.cFileName);
- 
-        // if (...) { // если это подпапка
-        // 	здесь будет обход в глубину
-        // }
-        // else {// это файл
-        // size+=res....
-        // }
+		
+        if (wcscmp(res.cFileName, L".") == 0 || wcscmp(res.cFileName, L"..") == 0) {
+			//_tprintf(L"*");
+			continue;
+		}
+		_tprintf(TEXT("file #%d is <%s>\n"), count, res.cFileName);
+		if ((res.dwFileAttributes & 16) == 16) { // если это подпапка
+			// 	здесь будет обход в глубину
+			SetCurrentDirectory (res.cFileName);
+			dfs();
+			SetCurrentDirectory( L"..");
+        }
+        else {// это файл
+		size += res.nFileSizeLow;
+		count++; // некоторые файлы не считаются??
+        }
     } while (FindNextFile(hFind, &res) != 0);
     FindClose(hFind);
 }
@@ -46,6 +53,8 @@ int main(int argc, wchar_t* argv[]) {
     dfs();                      	// запустить обход в глубину из текущей папки
  
     printf("File count = %d, size = %lld\n", count, size);
+
+	system("pause");
     return 0;
 }
  
